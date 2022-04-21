@@ -59,7 +59,7 @@ class IterDataPipe(IterableDataset[T_co], metaclass=_DataPipeMeta):
         [2, 4, 6, 8, 10]
     """
     functions: Dict[str, Callable] = {}
-    reduce_ex_hook : Optional[Callable] = None
+    reduce_ex_hook: Optional[Callable] = None
     getstate_hook: Optional[Callable] = None
 
     def __getattr__(self, attribute_name):
@@ -131,6 +131,14 @@ class IterDataPipe(IterableDataset[T_co], metaclass=_DataPipeMeta):
         if IterDataPipe.reduce_ex_hook is not None and hook_fn is not None:
             raise Exception("Attempt to override existing reduce_ex_hook")
         IterDataPipe.reduce_ex_hook = hook_fn
+
+    def __repr__(self):
+        # Instead of showing <torch. ... .MapperIterDataPipe object at 0x.....>, return the class name
+        return str(self.__class__.__qualname__)
+
+    def __str__(self):
+        # Instead of showing <torch. ... .MapperIterDataPipe object at 0x.....>, return the class name
+        return str(self.__class__.__qualname__)
 
 
 class DFIterDataPipe(IterDataPipe):
@@ -214,6 +222,14 @@ class MapDataPipe(Dataset[T_co], metaclass=_DataPipeMeta):
                 self.__dict__[k] = deserialize_fn(v)
             else:
                 self.__dict__[k] = v
+
+    def __repr__(self):
+        # Instead of showing <torch. ... .MapperIterDataPipe object at 0x.....>, return the class name
+        return str(self.__class__.__qualname__)
+
+    def __str__(self):
+        # Instead of showing <torch. ... .MapperIterDataPipe object at 0x.....>, return the class name
+        return str(self.__class__.__qualname__)
 
 
 class DataChunk(list, Generic[T]):

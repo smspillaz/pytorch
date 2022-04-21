@@ -82,7 +82,8 @@ def _default_meta_device_init_fn(module):
             module.reset_parameters()
     except BaseException as e:
         warnings.warn(
-                f"Unable to call reset_parameters() for module on meta device with error {str(e)}. Please ensure your module implements a ``reset_parameters`` function."
+            f"Unable to call reset_parameters() for module on meta device with error {str(e)}. "
+            "Please ensure your module implements a ``reset_parameters`` function."
         )
         raise e
 
@@ -491,7 +492,7 @@ class FullyShardedDataParallel(nn.Module):
         is_torchdistx_deferred_init = (
             _TORCHDISTX_AVAIL and not is_meta_module
             and any(fake.is_fake(p) for p in module.parameters())
-            )
+        )
 
         if is_meta_module:
             if param_init_fn is not None:
@@ -500,7 +501,7 @@ class FullyShardedDataParallel(nn.Module):
                     f"Expected {param_init_fn} to be callable, but got {type(param_init_fn)}"
                 )
                 param_init_fn(module)
-                else:
+            else:
                 # Call default initialization function that is dependent on
                 # reset_parameters.
                 _default_meta_device_init_fn(module)
@@ -515,7 +516,7 @@ class FullyShardedDataParallel(nn.Module):
             else:
                 # Call default torchdistx initialization function. Omit re-initialization of FSDP submodules
                 # which is unnecessary.
-                check_fn = lambda k: not isinstance(k, FullyShardedDataParallel)
+                check_fn = lambda k: not isinstance(k, FullyShardedDataParallel)  # noqa: E731
                 deferred_init.materialize_module(module, check_fn=check_fn)
 
         # device for computation, if module is on GPU, use module.device;

@@ -99,7 +99,9 @@ def modifies_arguments(f: NativeFunction) -> bool:
 # This function constructs the return statement for the kernels that contain mutations
 # It mostly just needs to special case multi-output returns to wrap the result in a tuple
 def return_str(f: NativeFunction) -> str:
-    if len(f.func.arguments.out) != 0:
+    # Need to check both # outs and # returns. Why?
+    # out= ops with a mutable Tensor(a!)[] argument are expected to have a void return type.
+    if len(f.func.arguments.out) != 0 and len(f.func.returns) != 0:
         if len(f.func.arguments.out) > 1:
             return_names = ", ".join(a.name for a in f.func.arguments.out)
             return f"return {DispatcherSignature.from_schema(f.func).returns_type().cpp_type()}({return_names});"

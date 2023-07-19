@@ -1,6 +1,8 @@
 #include <ATen/native/vulkan/impl/Arithmetic.h>
 #include <ATen/native/vulkan/impl/Common.h>
 
+#include <stdexcept>
+
 namespace at {
 namespace native {
 namespace vulkan {
@@ -16,6 +18,8 @@ api::ShaderInfo get_shader(const OpType type) {
       return VK_KERNEL(mul);
     case OpType::DIV:
       return VK_KERNEL(div);
+    default:
+      throw std::runtime_error("Invalid shader");
   }
 }
 
